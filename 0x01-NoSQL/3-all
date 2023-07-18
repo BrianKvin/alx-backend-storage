@@ -1,0 +1,2 @@
+// List all docs
+db.school.find()
