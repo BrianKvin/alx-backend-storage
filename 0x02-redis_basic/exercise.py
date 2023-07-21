@@ -3,7 +3,7 @@ import sys
 from uuid import uuid4
 from typing import Union, Callable, Optional
 
-UnionOfTypes = Union[str, bytes, int, float]
+# UnionOfTypes = Union[str, bytes, int, float]
 
 
 class Cache:
@@ -17,13 +17,13 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-    def store(self, data: UnionOfTypes) -> str:
+    def store(self, data: Union[str, bytes, int, float]) -> str:
         ''' store data in the cache '''
         randomKey = str(uuid4())
         self._redis.set(randomKey, data)
         return randomKey
 
-    def get(self, key: str, fn: Optional[Callable] = None) -> UnionOfTypes:
+    def get(self, key: str, fn: Optional[Callable] = None) -> Union[str, bytes, int, float]:
         ''' get data from cache '''
         if fn:
             return fn(self._redis.get(key))
