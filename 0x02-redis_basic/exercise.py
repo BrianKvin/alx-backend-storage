@@ -1,4 +1,5 @@
 import redis
+import sys
 from uuid import uuid4
 from typing import Union, Callable, Optional
 
@@ -9,7 +10,7 @@ class Cache:
     '''
         Cache class.
     '''
-    def __init__(self):i
+    def __init__(self):
         '''
             Initialize the cache.
         '''
