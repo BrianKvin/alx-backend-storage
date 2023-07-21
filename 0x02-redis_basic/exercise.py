@@ -6,14 +6,14 @@ from functools import wraps
 
 # UnionOfTypes = Union[str, bytes, int, float]
 
-def count_calls(fn: Callable) -> Callable:
+def count_calls(method: Callable) -> Callable:
     """ mplement a system to count how many times methods of the Cache class are called. """
-    key = fn.__qualname__
+    key = method.__qualname__
 
-    @wraps(fn)
+    @wraps(method)
     def wrapper(self, *args, **kwargs):
         self._redis.incr(key)
-        return fn(self, *args, **kwargs)
+        return method(self, *args, **kwargs)
 
     return wrapper
 
