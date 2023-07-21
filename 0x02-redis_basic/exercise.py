@@ -7,12 +7,26 @@ from functools import wraps
 # UnionOfTypes = Union[str, bytes, int, float]
 
 def count_calls(fn: Callable) -> Callable:
+    """ mplement a system to count how many times methods of the Cache class are called. """
     key = fn.__qualname__
 
     @wraps(fn)
     def wrapper(self, *args, **kwargs):
         self._redis.incr(key)
         return fn(self, *args, **kwargs)
+
+    return wrapper
+
+def call_history(method: Callable) -> Callable:
+    key1 = method.__qualname__+ ":inputs"
+    key2 = method.__qualname__+ ":outputs"
+
+    @wraps(method)
+    def wrapper(self, *args):
+        self._redis.rpush(key1, str(args))
+        x = method(self, *args)
+        self._redis.rpush(key2, x)
+        return x
 
     return wrapper
 
@@ -27,6 +41,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
     @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         ''' store data in the cache '''
